@@ -1,1 +1,141 @@
-"<!-- atualiza��o -->" 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empresa de Mídia e Produtos</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Helvetica Neue', sans-serif; background-color: #fff; color: #000; line-height: 1.6; }
+    nav { background-color: #000; color: #fff; text-align: center; padding: 10px 0; position: sticky; top: 0; z-index: 999; }
+    nav a { color: #fff; margin: 0 15px; text-decoration: none; font-weight: 500; }
+    header { height: 60vh; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; text-align: center; }
+    header h1 { font-size: 3em; animation: fadeIn 2s ease-in-out; }
+    section { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+    section h2 { font-size: 2em; margin-bottom: 30px; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px; }
+    .card { border: 1px solid #000; padding: 20px; margin: 10px; background: #fff; }
+    .card img, .card video { width: 100%; max-height: 300px; object-fit: cover; margin-bottom: 10px; }
+    .produto-btn { display: inline-block; padding: 10px 20px; background: #000; color: #fff; text-decoration: none; margin-top: 10px; }
+    .editable:hover { outline: 1px dashed #666; cursor: text; }
+    .admin-mode { background-color: #f1f1f1; }
+    .badge-admin { position: fixed; top: 10px; right: 10px; background: #000; color: #fff; padding: 5px 10px; border-radius: 4px; }
+    .success-msg { background: #e0ffe0; color: #006600; padding: 10px; margin-top: 10px; border-left: 5px solid #006600; display: none; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @media (max-width: 768px) {
+      .card { width: 100% !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#produtos">Produtos</a>
+    <a href="#cinema">Cinematográficos</a>
+    <a href="#reels">Reels</a>
+    <a href="#imagens">Imagens</a>
+    <a href="#equipe">Equipe</a>
+    <a href="#login">Login</a>
+  </nav>
+
+  <header>
+    <h1 contenteditable="false" class="editable">Bem-vindo à nossa empresa de mídia</h1>
+  </header>
+
+  <section id="produtos">
+    <h2>Produtos</h2>
+    <div class="card editable" contenteditable="false">
+      <img src="https://via.placeholder.com/400x300" alt="Produto">
+      <h3>Nome do Produto</h3>
+      <p>Descrição do produto com detalhes importantes.</p>
+      <a class="produto-btn" href="https://wa.me/SEUNUMEROAQUI" target="_blank">Entrar em contato</a>
+    </div>
+  </section>
+
+  <section id="cinema">
+    <h2>Vídeos Cinematográficos</h2>
+    <div class="card editable" contenteditable="false">
+      <video controls>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      </video>
+      <p>Este é um exemplo de vídeo cinematográfico com alta qualidade de produção.</p>
+    </div>
+  </section>
+
+  <section id="reels">
+    <h2>Vídeos Formato Reels</h2>
+    <div class="card editable" contenteditable="false">
+      <video controls>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      </video>
+      <p>Reel dinâmico e envolvente ideal para redes sociais.</p>
+    </div>
+  </section>
+
+  <section id="imagens">
+    <h2>Imagens</h2>
+    <div class="card editable" contenteditable="false">
+      <img src="https://via.placeholder.com/400x300" alt="Imagem criativa">
+      <p>Captura visual impressionante feita durante um projeto.</p>
+    </div>
+  </section>
+
+  <section id="equipe">
+    <h2>Equipe</h2>
+    <div class="card editable" contenteditable="false">
+      <img src="https://via.placeholder.com/200" alt="Membro da Equipe">
+      <h3>Nome da Pessoa</h3>
+      <p>Breve descrição sobre seu papel e experiência.</p>
+      <a class="produto-btn" href="https://linkedin.com/in/username" target="_blank">LinkedIn</a>
+    </div>
+  </section>
+
+  <section id="login">
+    <h2>Área Administrativa</h2>
+    <button onclick="toggleLogin()">Login como Admin</button>
+    <div class="success-msg" id="msg">Alterações salvas com sucesso!</div>
+  </section>
+
+  <div class="badge-admin hidden" id="adminBadge">Modo Desenvolvedor Ativo</div>
+
+  <script>
+    let isAdmin = false;
+
+    function toggleLogin() {
+      const senha = prompt("Digite a senha de admin:");
+      if (senha === "admin123") {
+        isAdmin = true;
+        document.body.classList.add("admin-mode");
+        document.querySelectorAll('.editable').forEach(el => {
+          el.setAttribute("contenteditable", true);
+        });
+        document.getElementById("adminBadge").classList.remove("hidden");
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+
+    document.querySelectorAll('.editable').forEach(el => {
+      el.addEventListener('input', saveEdits);
+    });
+
+    function saveEdits() {
+      const conteudo = {};
+      document.querySelectorAll('.editable').forEach((el, i) => {
+        conteudo[i] = el.innerHTML;
+      });
+      localStorage.setItem("conteudoEditado", JSON.stringify(conteudo));
+      document.getElementById("msg").style.display = "block";
+      setTimeout(() => document.getElementById("msg").style.display = "none", 2000);
+    }
+
+    window.onload = function () {
+      const salvo = JSON.parse(localStorage.getItem("conteudoEditado"));
+      if (salvo) {
+        document.querySelectorAll('.editable').forEach((el, i) => {
+          if (salvo[i]) el.innerHTML = salvo[i];
+        });
+      }
+    };
+  </script>
+</body>
+</html>
+
